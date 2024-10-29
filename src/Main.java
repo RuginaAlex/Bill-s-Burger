@@ -1,5 +1,7 @@
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        Burger burger = new Burger("regular",4.00);
+        burger.addToppings("Bacon","CHEESE", "MAYO");
+        burger.printItem();
     }
 }
