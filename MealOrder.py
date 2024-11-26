@@ -22,8 +22,12 @@ class MealOrder:
         )
 
     def add_burger_toppings(self, *toppings):
-        for topping in toppings:
-            self.burger.add_topping(topping)
+        for topping_list in toppings:
+            if isinstance(topping_list, list):  # Verificăm dacă este o listă
+                for topping in topping_list:
+                    self.burger.add_topping(topping)  # Adăugăm fiecare topping individual
+            else:
+                self.burger.add_topping(topping_list)  # Dacă este un singur element, îl adăugăm direct
 
     def set_drink_size(self, size):
         self.drink.set_size(size)
@@ -40,16 +44,15 @@ class MealOrder:
         print("-" * 30)
         print(f"Total: ${self.get_total_price():.2f}")
 
+    def get_burger_price(self):
+        return self.burger.get_adjusted_price()
 
-# Creăm o comandă
-order = MealOrder(burger_type="Regular", drink_type="Coke", side_type="Fries")
 
-# Adăugăm toppinguri la burger
-order.add_burger_toppings("Bacon", "Cheddar", "Lettuce")
-
-# Setăm dimensiunea băuturii și garniturii
-order.set_drink_size("LARGE")
-order.set_side_size("SMALL")
-
-# Afișăm lista detaliată
+order = MealOrder("Deluxe","Coke","Fries")
+order.set_side_size("MEDIUM")
+order.set_drink_size("MEDIUM")
+order.add_burger_toppings("Cheddar", "Gouda","Bacon","Ham","Avocado")
+order.get_total_price()
 order.print_itemized_list()
+
+

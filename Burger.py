@@ -21,11 +21,16 @@ TOPPINGS = {
 }
 
 
-class Burger(Item):
+class Burger:
 
 
-    def __init__(self, nume, pret):
-        super().__init__(type="burger",name=nume,price=pret)
+    def __init__(self, name, price):
+        if name == "Regular":
+            self.name = name
+            self.price = 4.0
+        elif name == "Deluxe":
+            self.name = name
+            self.price = 8.5
 
         self.extras = []
 
@@ -34,8 +39,10 @@ class Burger(Item):
     def add_topping(self,topping_name):
         for category, items in TOPPINGS.items():
             for topping, price in items:
-                if topping == topping_name:
+                if topping == topping_name and self.name == "Regular":
                     self.extras.append(Item(type="topping",name=topping,price=price))
+                elif topping == topping_name and self.name == "Deluxe":
+                    self.extras.append(Item(type="topping",name=topping,price=0))
 
         if len(self.extras) < 1:
             raise ValueError("We don't have this topping!")
