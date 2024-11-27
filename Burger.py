@@ -1,4 +1,5 @@
 from Item import Item
+
 TOPPINGS = {
     "Vegetables": [
         ("Lettuce", 0.0),
@@ -21,6 +22,9 @@ TOPPINGS = {
 }
 
 
+
+
+
 class Burger:
 
 
@@ -37,12 +41,17 @@ class Burger:
 
 
     def add_topping(self,topping_name):
+        topping_count = len(self.extras)
         for category, items in TOPPINGS.items():
             for topping, price in items:
                 if topping == topping_name and self.name == "Regular":
                     self.extras.append(Item(type="topping",name=topping,price=price))
-                elif topping == topping_name and self.name == "Deluxe":
+                elif topping == topping_name and self.name == "Deluxe" and topping_count <=4:
                     self.extras.append(Item(type="topping",name=topping,price=0))
+                    topping_count +=1
+                elif topping == topping_name and self.name == "Deluxe" and topping_count > 4:
+                    self.extras.append(Item(type="topping", name=topping, price=price))
+
 
         if len(self.extras) < 1:
             raise ValueError("We don't have this topping!")
@@ -50,8 +59,25 @@ class Burger:
     def get_adjusted_price(self):
         total_price = self.price
         for topping in self.extras:
-            total_price += topping.get_adjusted_price()
+            total_price += topping.price
+
         return total_price
+
+    def get_type(self):
+        return self.name
+
+    def get_topping_price(self, topping_name, number):
+        for category, items in TOPPINGS.items():
+            for topping, price in items:
+                if topping.lower() == topping_name.lower() and self.name == "Deluxe" and number < 5:
+                    return f"{0.00:.2f}"  # Returnăm prețul formatat cu 2 zecimale
+                elif topping.lower() == topping_name.lower() and self.name == "Deluxe" and number == 5:
+                    return f"{price:.2f}"  # Returnăm prețul formatat cu 2 zecimale
+                elif topping.lower() == topping_name.lower():
+                    return f"{price:.2f}"  # Returnăm prețul formatat cu 2 zecimale
+        raise ValueError(f"Topping '{topping_name}' not found!")
+
+
 
     def print_itemized_list(self):
         print(f"Base {self.get_name()}: ${self.price:.2f}")
@@ -62,6 +88,3 @@ class Burger:
 
     def get_name(self):
         return f"{self.name} BURGER"
-
-
-

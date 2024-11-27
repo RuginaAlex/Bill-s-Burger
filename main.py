@@ -125,7 +125,7 @@ def order_regular():
 
 
     topping_label = Label(
-        text="Select your extra toppings",
+        text="Select your extra toppings (Optional)",
         font=("Arial", 18, "bold"),
         bg=PALE_ORANGE,
         fg="black",
@@ -179,7 +179,7 @@ def order_regular():
 
     selected_garnish = StringVar()
     selected_garnish.set("Select a garnish")
-    dropdown_garnish = OptionMenu(window, selected_garnish, "Fries", "Sweet Potato Fries", "Coleslaw", "Pickles",
+    dropdown_garnish = OptionMenu(window, selected_garnish, "Fries", "Sweet Potato Fries", "Coleslaw", "Potato Wedges",
                                   "Onion Rings")
     dropdown_garnish.config(font=("Arial", 12), bg=ORANGE, width=20)
     dropdown_garnish.place(x=380, y=330)
@@ -285,17 +285,48 @@ def order_regular():
         bill_area.insert(END, "------------------------------\n")
 
         # Afișăm selecțiile în "Bill Area"
-        bill_area.insert(END, f"Regular burger: ${burger_price}\n")
+        bill_area.insert(END, f"Deluxe burger:         ${burger_price:.2f}\n")
         for item in cheese:
-            bill_area.insert(END, f"{item} : $1.0\n")
+            if item == "Cheddar":
+                bill_area.insert(END, f"{item} :              $0.00\n")
+            else:
+                bill_area.insert(END, f"{item} :                $0.00\n")
+
         for item in meat:
-            bill_area.insert(END, f"{item}: $1.5\n")
+            if item == "Ham":
+                bill_area.insert(END, f"{item}:                   $0.00\n")
+            else:
+                bill_area.insert(END, f"{item}:                 $0.00\n")
+
         for item in special:
-            bill_area.insert(END, f"{item}: $1.0\n")
+            if item == "Avocado":
+                bill_area.insert(END, f"{item}:               $0.00\n")
+            elif item == "Jalapeños":
+                bill_area.insert(END, f"{item}:             $0.00\n")
+
         if drink != "Select a drink":
-            bill_area.insert(END, f"{drink} : ${order.drink.get_adjusted_price():.2f}\n")
+            if drink == "Coke":
+                bill_area.insert(END, f"{drink} :                 ${order.drink.get_adjusted_price():.2f}\n")
+            elif drink == "Sprite":
+                bill_area.insert(END, f"{drink} :               ${order.drink.get_adjusted_price():.2f}\n")
+            elif drink == "Water":
+                bill_area.insert(END, f"{drink} :                ${order.drink.get_adjusted_price():.2f}\n")
+            elif drink == "Orange Juice":
+                bill_area.insert(END, f"{drink} :         ${order.drink.get_adjusted_price():.2f}\n")
+            elif drink == "Iced Tea":
+                bill_area.insert(END, f"{drink} :             ${order.drink.get_adjusted_price():.2f}\n")
+
         if garnish != "Select a garnish":
-            bill_area.insert(END, f"{garnish} : ${order.side.get_adjusted_price():.2f}\n")
+            if garnish == "Sweet Potato Fries":
+                bill_area.insert(END, f"{garnish} :   ${order.side.get_adjusted_price():.2f}\n")
+            elif garnish == "Fries":
+                bill_area.insert(END, f"{garnish} :                ${order.side.get_adjusted_price():.2f}\n")
+            elif garnish == "Coleslaw":
+                bill_area.insert(END, f"{garnish} :             ${order.side.get_adjusted_price():.2f}\n")
+            elif garnish == "Potato Wedges":
+                bill_area.insert(END, f"{garnish} :        ${order.side.get_adjusted_price():.2f}\n")
+            elif garnish == "Onion Rings":
+                bill_area.insert(END, f"{garnish} :          ${order.side.get_adjusted_price():.2f}\n")
 
         bill_area.insert(END, "------------------------------\n")
         bill_area.insert(END, f"Total Price: ${total_price:.2f}\n")
@@ -353,7 +384,7 @@ def order_regular():
 
 def order_deluxe():
     topping_label = Label(
-        text="Select your extra toppings",
+        text="Select your extra toppings (5 FREE)",
         font=("Arial", 18, "bold"),
         bg=PALE_ORANGE,
         fg="black",
@@ -400,7 +431,7 @@ def order_deluxe():
 
     selected_garnish = StringVar()
     selected_garnish.set("Select a garnish")
-    dropdown_garnish = OptionMenu(window, selected_garnish, "Fries", "Sweet Potato Fries", "Coleslaw", "Pickles",
+    dropdown_garnish = OptionMenu(window, selected_garnish, "Fries", "Sweet Potato Fries", "Coleslaw", "Potato Wedges",
                                   "Onion Rings")
     dropdown_garnish.config(font=("Arial", 12), bg=ORANGE, width=20)
     dropdown_garnish.place(x=380, y=330)
@@ -450,8 +481,8 @@ def order_deluxe():
         # Calculăm numărul total de toppinguri selectate
         total_toppings = len(cheese) + len(meat) + len(special)
 
-        # Verificăm dacă numărul total de toppinguri este exact 5
-        if total_toppings != 5:
+
+        if total_toppings < 5:
             messagebox.showwarning("Incomplete Selection", "You must select exactly 5 toppings!")
             return
 
@@ -504,31 +535,68 @@ def order_deluxe():
 
         # Afișăm selecțiile în "Bill Area"
         bill_area.insert(END, f"Deluxe burger:         ${burger_price:.2f}\n")
+
+        number = 0
         for item in cheese:
+
             if item == "Cheddar":
-                bill_area.insert(END, f"{item} :              $0.00\n")
+                bill_area.insert(END, f"{item} :              ${order.burger.get_topping_price(item,number)}\n")
+                number +=1
             else:
-                bill_area.insert(END, f"{item} :                $0.00\n")
+                bill_area.insert(END, f"{item} :                ${order.burger.get_topping_price(item,number)}\n")
+                number +=1
+
 
         for item in meat:
             if item == "Ham":
-                bill_area.insert(END, f"{item}:                   $0.00\n")
+                bill_area.insert(END, f"{item}:                   ${order.burger.get_topping_price(item,number)}\n")
+                number +=1
+
             else:
-                bill_area.insert(END, f"{item}:                 $0.00\n")
+                bill_area.insert(END, f"{item}:                 ${order.burger.get_topping_price(item,number)}\n")
+                number +=1
+
 
         for item in special:
             if item == "Avocado":
-                bill_area.insert(END, f"{item}:               $0.00\n")
-            else:
-                bill_area.insert(END, f"{item}:                 $0.00\n")
+                bill_area.insert(END, f"{item}:               ${order.burger.get_topping_price(item,number)}\n")
+                number +=1
+
+            elif item == "Jalapeños":
+                bill_area.insert(END, f"{item}:             ${order.burger.get_topping_price(item,number)}\n")
+                number +=1
+
 
         if drink != "Select a drink":
             if drink == "Coke":
                 bill_area.insert(END, f"{drink} :                 ${order.drink.get_adjusted_price():.2f}\n")
-            else:
-                pass
+            elif drink == "Sprite":
+                bill_area.insert(END, f"{drink} :               ${order.drink.get_adjusted_price():.2f}\n")
+            elif drink == "Water":
+                bill_area.insert(END, f"{drink} :                ${order.drink.get_adjusted_price():.2f}\n")
+            elif drink == "Orange Juice":
+                bill_area.insert(END, f"{drink} :         ${order.drink.get_adjusted_price():.2f}\n")
+            elif drink == "Iced Tea":
+                bill_area.insert(END, f"{drink} :             ${order.drink.get_adjusted_price():.2f}\n")
+
+
+
+
+
         if garnish != "Select a garnish":
-            bill_area.insert(END, f"{garnish} :                ${order.side.get_adjusted_price():.2f}\n")
+            if garnish == "Sweet Potato Fries":
+                bill_area.insert(END, f"{garnish} :   ${order.side.get_adjusted_price():.2f}\n")
+            elif garnish == "Fries":
+                bill_area.insert(END, f"{garnish} :                ${order.side.get_adjusted_price():.2f}\n")
+            elif garnish == "Coleslaw":
+                bill_area.insert(END, f"{garnish} :             ${order.side.get_adjusted_price():.2f}\n")
+            elif garnish == "Potato Wedges":
+                bill_area.insert(END, f"{garnish} :        ${order.side.get_adjusted_price():.2f}\n")
+            elif garnish == "Onion Rings":
+                bill_area.insert(END, f"{garnish} :          ${order.side.get_adjusted_price():.2f}\n")
+
+
+
 
         bill_area.insert(END, "------------------------------\n")
         bill_area.insert(END, f"Total Price:           ${total_price:.2f}\n")

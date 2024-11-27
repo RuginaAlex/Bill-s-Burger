@@ -1,5 +1,6 @@
-from Burger import Burger
+from Burger import *
 from Item import Item
+
 
 
 class MealOrder:
@@ -14,6 +15,7 @@ class MealOrder:
         # Inițializare garnitură
         self.side = Item(type="side", name=side_type, price=1.5)
 
+
     def get_total_price(self):
         return (
             self.burger.get_adjusted_price() +
@@ -21,13 +23,21 @@ class MealOrder:
             self.side.get_adjusted_price()
         )
 
+    def get_burger_type(self):
+        return self.burger.get_type()
+
     def add_burger_toppings(self, *toppings):
         for topping_list in toppings:
             if isinstance(topping_list, list):  # Verificăm dacă este o listă
                 for topping in topping_list:
                     self.burger.add_topping(topping)  # Adăugăm fiecare topping individual
+
             else:
                 self.burger.add_topping(topping_list)  # Dacă este un singur element, îl adăugăm direct
+
+
+
+
 
     def set_drink_size(self, size):
         self.drink.set_size(size)
@@ -48,11 +58,12 @@ class MealOrder:
         return self.burger.get_adjusted_price()
 
 
+
+
 order = MealOrder("Deluxe","Coke","Fries")
 order.set_side_size("MEDIUM")
 order.set_drink_size("MEDIUM")
-order.add_burger_toppings("Cheddar", "Gouda","Bacon","Ham","Avocado")
-order.get_total_price()
+order.add_burger_toppings("Cheddar", "Gouda","Bacon","Ham","Avocado","Jalapeños")
+print(order.get_total_price())
 order.print_itemized_list()
-
 
