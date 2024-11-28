@@ -60,10 +60,10 @@ class MealOrder:
 
 
 
-order = MealOrder("Deluxe","Coke","Fries")
-order.set_side_size("MEDIUM")
-order.set_drink_size("MEDIUM")
-order.add_burger_toppings("Cheddar", "Gouda","Bacon","Ham","Avocado","Jalapeños")
-print(order.get_total_price())
-order.print_itemized_list()
-
+# order = MealOrder("Deluxe","Coke","Fries")
+# order.set_side_size("MEDIUM")
+# order.set_drink_size("MEDIUM")
+# order.add_burger_toppings("Cheddar", "Gouda","Bacon","Ham","Avocado","Jalapeños")
+# print(order.get_total_price())
+# order.print_itemized_list()
+#

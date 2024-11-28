@@ -3,6 +3,7 @@ from tkinter import messagebox
 
 from MealOrder import MealOrder
 
+
 # ---------------------------- CONSTANTS ------------------------------- #
 
 YELLOW = "#fffacd"
@@ -13,29 +14,43 @@ PALE_ORANGE = "#ffc04c"
 # ---------------------------- Commands ------------------------------- #
 
 def set_regular():
+    # Repoziționează butoanele mai sus
+    radio_regular.place(x=110, y=65)  # Mută butonul "Regular" mai sus
+    radio_deluxe.place(x=430, y=65)  # Mută butonul "Deluxe" mai sus
+
     show_all_regular()
+    menu_button.place_forget()
+
 
 def set_deluxe():
+    # Repoziționează butoanele mai sus
+    radio_regular.place(x=110, y=65)  # Mută butonul "Regular" mai sus
+    radio_deluxe.place(x=430, y=65)  # Mută butonul "Deluxe" mai sus
+
     show_all_deluxe()
+    menu_button.place_forget()
+
 
 
 
 def show_all_regular():
     canvas1.delete("all")
     canvas2.delete("all")
+    menu_button.place_forget()
     window.geometry("1100x450")
     order_regular()
 
 def show_all_deluxe():
     canvas1.delete("all")
     canvas2.delete("all")
+    menu_button.place_forget()
     window.geometry("1100x450")
     order_deluxe()
 
 
 def get_selected_items(listbox_cheese, listbox_meat, listbox_special):
     def clean_selection(selection):
-        # Extragem doar numele topping-ului (partea înainte de ":")
+
         return [item.split(":")[0].strip() for item in selection]
 
     cheese_selection = clean_selection([listbox_cheese.get(i) for i in listbox_cheese.curselection()])
@@ -50,6 +65,66 @@ def get_selected_items(listbox_cheese, listbox_meat, listbox_special):
     }
 
 
+def open_menu_window():
+    # Creează o nouă fereastră
+    menu_window = Toplevel(window)
+    menu_window.title("Menu")
+    menu_window.geometry("900x500")
+
+    # Creează un canvas pentru a afișa imaginea de fundal
+    bg_canvas = Canvas(menu_window, width=900, height=500, highlightthickness=0)
+    bg_canvas.pack(fill="both", expand=True)
+
+    # Încarcă imaginea de fundal
+    bg_image = PhotoImage(file="background.png")
+    bg_canvas.create_image(0, 0, image=bg_image, anchor="nw")
+
+    # Adaugă un titlu pentru fereastra meniu
+    menu_label = Label(
+        menu_window,
+        text="Bill's Burger Menu",
+        font=("Arial", 24, "bold"),
+        bg=ORANGE,
+        fg="black",
+        pady=10,
+        padx=10
+    )
+    bg_canvas.create_window(375, 50, window=menu_label)
+
+    # Adaugă detalii despre produsele disponibile într-un Label transparent
+    menu_content = """
+    Welcome to Bill's Burger Menu!
+
+    Regular Burger: $4.00
+    Deluxe Burger: $8.50 (includes 5 free toppings)
+
+    Toppings:
+    - Cheese: Cheddar ($1.00), Gouda ($1.00)
+    - Meat: Bacon ($1.50), Ham ($1.50)
+    - Special: Avocado ($1.00), Jalapeños ($1.00)
+
+    Drinks:
+    - Coke, Sprite, Water, Orange Juice, Iced Tea ($1.00)
+
+    Garnishes:
+    - Fries, Sweet Potato Fries, Coleslaw, Pickles, Onion Rings ($1.50)
+    """
+
+    menu_text_label = Label(
+        menu_window,
+        text=menu_content,
+        font=("Courier", 12),
+        bg="grey",  # Eliminăm fundalul
+        fg="white",
+        justify="left",
+        wraplength=700
+    )
+    bg_canvas.create_window(310, 300, window=menu_text_label)
+
+    # Stochează referința imaginii pentru a preveni garbage collection
+    menu_window.bg_image = bg_image
+
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
@@ -60,21 +135,20 @@ window.grid_rowconfigure(1, minsize=50)
 
 
 canvas1 = Canvas(window, width=800, height=600, bg=YELLOW, highlightthickness=0)
-canvas1.place(x=-180, y=60)  # Poziționăm pe întreaga fereastră
+canvas1.place(x=-180, y=100)
 
 # Încărcăm imaginea
 image = PhotoImage(file="regular.png")
-canvas1.create_image(325, 200, image=image)  # Centrăm imaginea (jumătatea lățimii și înălțimii)
-
+canvas1.create_image(325, 200, image=image)
 
 
 
 canvas2 = Canvas(window, width=800, height=600, bg=YELLOW, highlightthickness=0)
-canvas2.place(x=270, y=55)  # Poziționăm pe întreaga fereastră
+canvas2.place(x=270, y=100)
 
-# Încărcăm imaginea
+
 icon_image = PhotoImage(file="deluxe.png")
-canvas2.create_image(200, 200, image=icon_image)  # Centrăm imaginea (jumătatea lățimii și înălțimii)
+canvas2.create_image(200, 200, image=icon_image)
 
 
 
@@ -106,7 +180,7 @@ radio_regular = Radiobutton(
     bg=YELLOW,
     command= set_regular
 )
-radio_regular.place(x=110,y=70)
+radio_regular.place(x=110,y=170)
 
 
 radio_deluxe = Radiobutton(
@@ -118,7 +192,19 @@ radio_deluxe = Radiobutton(
     bg=YELLOW,
     command= set_deluxe
 )
-radio_deluxe.place(x= 430, y = 70)
+radio_deluxe.place(x= 430, y = 170)
+
+menu_button = Button(
+    window,
+    text="Menu",
+    font=("Arial", 14, "bold"),
+    bg=ORANGE,
+    fg="black",
+    width=15,
+    height=2,
+    command=open_menu_window
+)
+menu_button.place(x=220, y=70)
 
 
 def order_regular():
@@ -187,13 +273,13 @@ def order_regular():
 
     selected_size_drink = StringVar()
     selected_size_drink.set("Select a drink size")
-    dropdown_size_drink = OptionMenu(window,selected_size_drink,"MEDIUM","SMALL","LARGE")
+    dropdown_size_drink = OptionMenu(window, selected_size_drink, "SMALL", "MEDIUM", "LARGE")
     dropdown_size_drink.config(font=("Arial", 12), bg=ORANGE, width=20)
     dropdown_size_drink.place(x=30 ,y= 370)
 
     selected_size_garnish = StringVar()
     selected_size_garnish.set("Select a garnish size")
-    dropdown_size_garnish = OptionMenu(window, selected_size_garnish, "MEDIUM", "SMALL", "LARGE")
+    dropdown_size_garnish = OptionMenu(window, selected_size_garnish, "SMALL", "MEDIUM", "LARGE")
     dropdown_size_garnish.config(font=("Arial", 12), bg=ORANGE, width=20)
     dropdown_size_garnish.place(x=380, y=370)
 
@@ -438,13 +524,13 @@ def order_deluxe():
 
     selected_size_drink = StringVar()
     selected_size_drink.set("Select a drink size")
-    dropdown_size_drink = OptionMenu(window, selected_size_drink, "MEDIUM", "SMALL", "LARGE")
+    dropdown_size_drink = OptionMenu(window, selected_size_drink, "SMALL", "MEDIUM", "LARGE")
     dropdown_size_drink.config(font=("Arial", 12), bg=ORANGE, width=20)
     dropdown_size_drink.place(x=30, y=370)
 
     selected_size_garnish = StringVar()
     selected_size_garnish.set("Select a garnish size")
-    dropdown_size_garnish = OptionMenu(window, selected_size_garnish, "MEDIUM", "SMALL", "LARGE")
+    dropdown_size_garnish = OptionMenu(window, selected_size_garnish, "SMALL", "MEDIUM", "LARGE")
     dropdown_size_garnish.config(font=("Arial", 12), bg=ORANGE, width=20)
     dropdown_size_garnish.place(x=380, y=370)
 
