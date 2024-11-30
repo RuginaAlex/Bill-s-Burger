@@ -14,26 +14,24 @@ PALE_ORANGE = "#ffc04c"
 # ---------------------------- Commands ------------------------------- #
 
 def set_regular():
-    # Repoziționează butoanele mai sus
-    radio_regular.place(x=110, y=65)  # Mută butonul "Regular" mai sus
-    radio_deluxe.place(x=430, y=65)  # Mută butonul "Deluxe" mai sus
-
+    """Set the interface for regular burger selection."""
+    radio_regular.place(x=110, y=65)  # Move buttons up
+    radio_deluxe.place(x=430, y=65)
     show_all_regular()
     menu_button.place_forget()
 
 
 def set_deluxe():
-    # Repoziționează butoanele mai sus
-    radio_regular.place(x=110, y=65)  # Mută butonul "Regular" mai sus
-    radio_deluxe.place(x=430, y=65)  # Mută butonul "Deluxe" mai sus
-
+    """Set the interface for deluxe burger selection."""
+    radio_regular.place(x=110, y=65)  # Move buttons up
+    radio_deluxe.place(x=430, y=65)
     show_all_deluxe()
     menu_button.place_forget()
 
 
 
-
 def show_all_regular():
+    """Display the interface for ordering regular burgers."""
     canvas1.delete("all")
     canvas2.delete("all")
     menu_button.place_forget()
@@ -41,6 +39,7 @@ def show_all_regular():
     order_regular()
 
 def show_all_deluxe():
+    """Display the interface for ordering deluxe burgers."""
     canvas1.delete("all")
     canvas2.delete("all")
     menu_button.place_forget()
@@ -49,37 +48,32 @@ def show_all_deluxe():
 
 
 def get_selected_items(listbox_cheese, listbox_meat, listbox_special):
+    """Retrieve and clean selected items from listboxes."""
     def clean_selection(selection):
-
         return [item.split(":")[0].strip() for item in selection]
 
-    cheese_selection = clean_selection([listbox_cheese.get(i) for i in listbox_cheese.curselection()])
-    meat_selection = clean_selection([listbox_meat.get(i) for i in listbox_meat.curselection()])
-    special_selection = clean_selection([listbox_special.get(i) for i in listbox_special.curselection()])
+    cheese = clean_selection([listbox_cheese.get(i) for i in listbox_cheese.curselection()])
+    meat = clean_selection([listbox_meat.get(i) for i in listbox_meat.curselection()])
+    special = clean_selection([listbox_special.get(i) for i in listbox_special.curselection()])
+    return {"cheese": cheese, "meat": meat, "special": special}
 
-    # Returnează selecțiile ca dicționar
-    return {
-        "cheese": cheese_selection,
-        "meat": meat_selection,
-        "special": special_selection,
-    }
 
 
 def open_menu_window():
-    # Creează o nouă fereastră
+    """Open a new window displaying the menu."""
     menu_window = Toplevel(window)
     menu_window.title("Menu")
     menu_window.geometry("900x500")
 
-    # Creează un canvas pentru a afișa imaginea de fundal
+    # Add background canvas
     bg_canvas = Canvas(menu_window, width=900, height=500, highlightthickness=0)
     bg_canvas.pack(fill="both", expand=True)
 
-    # Încarcă imaginea de fundal
-    bg_image = PhotoImage(file="background.png")
+    # Add background image
+    bg_image = PhotoImage(file="ss/background.png")
     bg_canvas.create_image(0, 0, image=bg_image, anchor="nw")
 
-    # Adaugă un titlu pentru fereastra meniu
+    # Add title
     menu_label = Label(
         menu_window,
         text="Bill's Burger Menu",
@@ -91,7 +85,7 @@ def open_menu_window():
     )
     bg_canvas.create_window(375, 50, window=menu_label)
 
-    # Adaugă detalii despre produsele disponibile într-un Label transparent
+    # Add menu content
     menu_content = """
     Welcome to Bill's Burger Menu!
 
@@ -109,20 +103,20 @@ def open_menu_window():
     Garnishes:
     - Fries, Sweet Potato Fries, Coleslaw, Pickles, Onion Rings ($1.50)
     """
-
     menu_text_label = Label(
         menu_window,
         text=menu_content,
         font=("Courier", 12),
-        bg="grey",  # Eliminăm fundalul
+        bg="grey",
         fg="white",
         justify="left",
         wraplength=700
     )
     bg_canvas.create_window(310, 300, window=menu_text_label)
 
-    # Stochează referința imaginii pentru a preveni garbage collection
+    # Prevent garbage collection of the image
     menu_window.bg_image = bg_image
+
 
 
 
@@ -138,7 +132,7 @@ canvas1 = Canvas(window, width=800, height=600, bg=YELLOW, highlightthickness=0)
 canvas1.place(x=-180, y=100)
 
 # Încărcăm imaginea
-image = PhotoImage(file="regular.png")
+image = PhotoImage(file="ss/regular.png")
 canvas1.create_image(325, 200, image=image)
 
 
@@ -147,13 +141,13 @@ canvas2 = Canvas(window, width=800, height=600, bg=YELLOW, highlightthickness=0)
 canvas2.place(x=270, y=100)
 
 
-icon_image = PhotoImage(file="deluxe.png")
+icon_image = PhotoImage(file="ss/deluxe.png")
 canvas2.create_image(200, 200, image=icon_image)
 
 
 
 
-img = PhotoImage(file="icon.png")
+img = PhotoImage(file="ss/icon.png")
 window.iconphoto(False, img)
 
 title_label = Label(
@@ -372,23 +366,33 @@ def order_regular():
 
         # Afișăm selecțiile în "Bill Area"
         bill_area.insert(END, f"Deluxe burger:         ${burger_price:.2f}\n")
+        number = 0
         for item in cheese:
+
             if item == "Cheddar":
-                bill_area.insert(END, f"{item} :              $0.00\n")
+                bill_area.insert(END, f"{item} :              ${order.burger.get_topping_price(item, number)}\n")
+                number += 1
             else:
-                bill_area.insert(END, f"{item} :                $0.00\n")
+                bill_area.insert(END, f"{item} :                ${order.burger.get_topping_price(item, number)}\n")
+                number += 1
 
         for item in meat:
             if item == "Ham":
-                bill_area.insert(END, f"{item}:                   $0.00\n")
+                bill_area.insert(END, f"{item}:                   ${order.burger.get_topping_price(item, number)}\n")
+                number += 1
+
             else:
-                bill_area.insert(END, f"{item}:                 $0.00\n")
+                bill_area.insert(END, f"{item}:                 ${order.burger.get_topping_price(item, number)}\n")
+                number += 1
 
         for item in special:
             if item == "Avocado":
-                bill_area.insert(END, f"{item}:               $0.00\n")
+                bill_area.insert(END, f"{item}:               ${order.burger.get_topping_price(item, number)}\n")
+                number += 1
+
             elif item == "Jalapeños":
-                bill_area.insert(END, f"{item}:             $0.00\n")
+                bill_area.insert(END, f"{item}:             ${order.burger.get_topping_price(item, number)}\n")
+                number += 1
 
         if drink != "Select a drink":
             if drink == "Coke":
@@ -461,7 +465,7 @@ def order_regular():
     bill_area.insert(END, "Product               Price\n")
     bill_area.insert(END, "------------------------------\n")
     bill_area.config(state=DISABLED)  # Blochează editarea manuală
-
+    
     # Creăm un Canvas pentru linia verticală
     separator = Canvas(window, width=5, height=600, bg=PALE_ORANGE, highlightthickness=1)
     separator.place(x=670, y=0)  # Poziționăm linia între cele două secțiuni
