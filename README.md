@@ -15,10 +15,15 @@
 
 ## 📸 Screenshot
 ### Main Menu
-![Main Menu](screenshots/main_menu.png)  
+![Main Menu](ss/main_menu.png)  
+
+---
 
 ### Regular/Deluxe Ordering
-![Ordering Screen](screenshots/ordering_screen.png)  
+
+| Regular Burger Screen                          | Deluxe Burger Screen                          |
+|------------------------------------------------|-----------------------------------------------|
+| ![Regular Burger](ss/regular_burger_final.png) | ![Deluxe Burger](ss/deluxe_burger_final.png)  |
 
 ---
 
@@ -64,21 +69,25 @@ This application is built using **Object-Oriented Programming (OOP)** to ensure 
 ### 1️⃣ Initial Setup
 The initial version focused on creating the basic structure for a single burger type and displaying it in a text-based interface.
 
+![Main Menu](ss/prezentare1.png)  
 ---
 
 ### 2️⃣ Adding a Graphical Interface
 The application was transformed into a GUI using **Tkinter**, providing a visually appealing way for users to interact with the ordering system.
 
+![Main Menu](ss/prezentare2.png)  
 ---
 
 ### 3️⃣ Toppings and Dynamic Pricing
 Functionality for selecting toppings and dynamically updating the total price was added, making the ordering process more interactive.
 
+![Main Menu](ss/prezentare3.png)  
 ---
 
 ### 4️⃣ Input Validation and Final Bill
 Implemented validation to ensure all required inputs are selected before generating the bill, along with a detailed itemized receipt.
 
+![Main Menu](ss/prezentare4.png)  
 ---
 
 ## 📚 Key Concepts Demonstrated
