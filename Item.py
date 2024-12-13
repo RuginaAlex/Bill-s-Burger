@@ -10,7 +10,8 @@ class Item:
         self.price = price
         self.size = size.upper()
 
-        if self.type in ["drink", "side"] and self.size not in ["SMALL", "MEDIUM", "LARGE"]:
+        if (self.type in ["drink", "side"] and self.size
+                not in ["SMALL", "MEDIUM", "LARGE"]):
             raise ValueError("Invalid size. Size must be SMALL, MEDIUM, or LARGE for drinks and sides.")
 
     def get_name(self):
